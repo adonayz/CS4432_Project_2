@@ -28,7 +28,12 @@ public class SortPlan implements Plan {
       sch = p.schema();
       comp = new RecordComparator(sortfields);
    }
-   
+
+   // CS4432-Project2: I modified this function. It checks whether the
+   // table has already been sorted before proceeding into sorting
+   // This version of the function returns ExtendedSortScan so that we
+   // can override some functions in SortScan so that we can avoid
+   // unnecessary sorting processes.
    /**
     * This method is where most of the action is.
     * Up to 2 sorted temporary tables are created,
@@ -36,12 +41,23 @@ public class SortPlan implements Plan {
     * @see simpledb.query.Plan#open()
     */
    public Scan open() {
-      Scan src = p.open();
-      List<TempTable> runs = splitIntoRuns(src);
-      src.close();
-      while (runs.size() > 2)
-         runs = doAMergeIteration(runs);
-      return new SortScan(runs, comp);
+      List<TempTable> runs;
+      boolean initiateSort;
+
+      TablePlan tablePlan = (TablePlan) p;
+      initiateSort = !tablePlan.getTableInfo().isSorted();
+
+      if(initiateSort){
+         Scan src = p.open();
+         runs = splitIntoRuns(src);
+         src.close();
+         while (runs.size() > 2)
+            runs = doAMergeIteration(runs);
+      }else{
+         runs = null;
+      }
+
+      return new ExtendedSortScan(runs, comp, tablePlan, tx);
    }
    
    /**

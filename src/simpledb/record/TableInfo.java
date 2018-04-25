@@ -13,7 +13,7 @@ public class TableInfo {
    private Map<String,Integer> offsets;
    private int recordlen;
    private String tblname;
-   private boolean isSorted = false; // CS4432-Project2: indicates if tables is sorted or not
+   private boolean isSorted; // CS4432-Project2: indicates if tables is sorted or not
 
    /**
     * Creates a TableInfo object, given a table name
@@ -33,6 +33,7 @@ public class TableInfo {
          pos += lengthInBytes(fldname);
       }
       recordlen = pos;
+      this.isSorted = false;
    }
    
    /**
@@ -50,6 +51,7 @@ public class TableInfo {
       this.schema    = schema;
       this.offsets   = offsets;
       this.recordlen = recordlen;
+      this.isSorted = false;
    }
    
    /**
@@ -95,10 +97,17 @@ public class TableInfo {
          return STR_SIZE(schema.length(fldname));
    }
 
+    // CS4432-Project2: getter for tblname
+    public String tableName(){
+       return tblname;
+    }
+
+    // CS4432-Project2: getter for isSorted
    public boolean isSorted() {
       return isSorted;
    }
 
+    // CS4432-Project2: setter for isSorted
    public void setSorted(boolean sorted) {
       isSorted = sorted;
    }

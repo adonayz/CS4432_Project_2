@@ -68,4 +68,10 @@ public class TablePlan implements Plan {
    public Schema schema() {
       return ti.schema();
    }
+
+   // CS4432-Project2: returns tableInfo so that old table data
+   // and sort status can be retrieved
+   public TableInfo getTableInfo(){
+      return ti;
+   }
 }

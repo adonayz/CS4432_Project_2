@@ -44,4 +44,10 @@ public class MetadataMgr {
    public StatInfo getStatInfo(String tblname, TableInfo ti, Transaction tx) {
       return statmgr.getStatInfo(tblname, ti, tx);
    }
+
+   // CS4432-Project2: I added this method so that we can alter the information
+   // of a table whenever we sort it. So that next time we dont have to repeat the process
+   public void broadcastSort(TableInfo tableInfo, Transaction transaction){
+      tblmgr.setTableInfo(tableInfo, transaction);
+   }
 }
