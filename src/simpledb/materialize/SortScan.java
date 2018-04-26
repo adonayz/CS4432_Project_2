@@ -27,11 +27,14 @@ public class SortScan implements Scan {
     */
    public SortScan(List<TempTable> runs, RecordComparator comp) {
       this.comp = comp;
-      s1 = (UpdateScan) runs.get(0).open();
-      hasmore1 = s1.next();
-      if (runs.size() > 1) {
-         s2 = (UpdateScan) runs.get(1).open();
-         hasmore2 = s2.next();
+      // CS4432-Project2: check if runs is null because we pass null if it has already been sorted
+      if(runs != null){
+         s1 = (UpdateScan) runs.get(0).open();
+         hasmore1 = s1.next();
+         if (runs.size() > 1) {
+            s2 = (UpdateScan) runs.get(1).open();
+            hasmore2 = s2.next();
+         }
       }
    }
    
@@ -144,7 +147,7 @@ public class SortScan implements Scan {
       RID rid1 = savedposition.get(0);
       RID rid2 = savedposition.get(1);
       s1.moveToRid(rid1);
-      if (rid2 != null)
+      if (s2 != null) // CS4432-Project2: modified
          s2.moveToRid(rid2);
    }
 }

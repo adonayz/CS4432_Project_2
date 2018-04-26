@@ -105,6 +105,19 @@ public class SimpleDB {
     * @return the system's planner for SQL commands
     */
    public static Planner planner() {
+      QueryPlanner  qplanner = new BasicQueryPlanner();
+      UpdatePlanner uplanner = new BasicUpdatePlanner();
+      return new Planner(qplanner, uplanner);
+   }
+
+   // CS4432-Project 2: This method has been modified inorder to
+   // accommodate new exploit sort planner
+   /**
+    * Creates a planner for SQL commands.
+    * To change how the planner works, modify this method.
+    * @return the system's planner for SQL commands
+    */
+   public static Planner exploitSortPlanner() {
       QueryPlanner  qplanner = new ExploitSortQueryPlanner();
       UpdatePlanner uplanner = new BasicUpdatePlanner();
       return new Planner(qplanner, uplanner);
