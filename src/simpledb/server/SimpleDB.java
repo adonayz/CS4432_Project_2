@@ -24,7 +24,7 @@ import simpledb.index.planner.IndexUpdatePlanner;
  * @author Edward Sciore
  */
 public class SimpleDB {
-   public static int BUFFER_SIZE = 8;
+   public static int BUFFER_SIZE = 200; // CS4432 Project2: changed because I ran to issues while testing
    public static String LOG_FILE = "simpledb.log";
    
    private static FileMgr     fm;
@@ -98,19 +98,19 @@ public class SimpleDB {
 
 
    // CS4432-Project 2: This method has been modified inorder to
-   // accommodate new exploit sort planner
+   // accommodate task 1, 2, 3
    /**
     * Creates a planner for SQL commands.
     * To change how the planner works, modify this method.
     * @return the system's planner for SQL commands
     */
    public static Planner planner() {
-      QueryPlanner  qplanner = new BasicQueryPlanner();
-      UpdatePlanner uplanner = new BasicUpdatePlanner();
+      QueryPlanner  qplanner = new HeuristicQueryPlanner();
+      UpdatePlanner uplanner = new IndexUpdatePlanner();
       return new Planner(qplanner, uplanner);
    }
 
-   // CS4432-Project 2: This method has been modified inorder to
+   // CS4432-Project 2: This method has been created inorder to
    // accommodate new exploit sort planner
    /**
     * Creates a planner for SQL commands.

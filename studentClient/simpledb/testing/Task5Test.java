@@ -1,3 +1,5 @@
+package testing;
+
 import simpledb.remote.SimpleDriver;
 
 import java.sql.*;
@@ -8,7 +10,7 @@ import java.util.Random;
  * Created by Adonay on 4/25/2018.
  */
 public class Task5Test {
-    private static int MAX_RECORDS = 100000;
+    private static int MAX_RECORDS = 10000;
     public static void main(String[] args) {
         Connection conn = null;
         try {
@@ -49,13 +51,13 @@ public class Task5Test {
                 System.out.println("Testing Join Query. Attempt No. : " + (3-counter));
                 ResultSet rslt;
                 long start,end;
-                String query = "SELECT a, b, c FROM LHS, RHS WHERE a = c";
-                System.out.println("Query: "+ query + "\n");
+                String query = "SELECT a, b, c, d FROM LHS, RHS WHERE a = c";
+                System.out.println("Query: "+ query + "\ntesting...\n");
                 start = System.currentTimeMillis();
                 rslt = stmt.executeQuery(query);
                 while (rslt.next()) {
                     System.out.println("a : " + rslt.getInt("a") + " c : "
-                            + rslt.getInt("c") + " b : " + rslt.getInt("b"));
+                            + rslt.getInt("c") + " b : " + rslt.getInt("b") +" d : " + rslt.getInt("d"));
                 }
                 end = System.currentTimeMillis();
                 elapsed_times.add(end-start);
@@ -65,6 +67,7 @@ public class Task5Test {
             }
 
             System.out.println("FINAL REPORT:");
+            System.out.println("Number of records per table: " + String.valueOf(MAX_RECORDS));
             for(int k = 0; k < elapsed_times.size(); k++){
                 System.out.println("Attempt " + String.valueOf(k+1) + ": " + String.valueOf(elapsed_times.get(k)) + " ms");
             }

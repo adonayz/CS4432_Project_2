@@ -2,6 +2,8 @@ package simpledb.metadata;
 
 import static java.sql.Types.INTEGER;
 import static simpledb.file.Page.BLOCK_SIZE;
+
+import simpledb.index.hash.ExtensibleHashIndex;
 import simpledb.server.SimpleDB;
 import simpledb.tx.Transaction;
 import simpledb.record.*;
@@ -19,7 +21,7 @@ import simpledb.index.btree.BTreeIndex; //in case we change to btree indexing
  * @author Edward Sciore
  */
 public class IndexInfo {
-   private String idxname, fldname;
+   private String idxname, fldname, idxtype;
    private Transaction tx;
    private TableInfo ti;
    private StatInfo si;
@@ -32,22 +34,33 @@ public class IndexInfo {
     * @param tx the calling transaction
     */
    public IndexInfo(String idxname, String tblname, String fldname,
-                    Transaction tx) {
+                    Transaction tx, String idxtype) {
       this.idxname = idxname;
       this.fldname = fldname;
       this.tx = tx;
+      this.idxtype = idxtype;
       ti = SimpleDB.mdMgr().getTableInfo(tblname, tx);
       si = SimpleDB.mdMgr().getStatInfo(tblname, ti, tx);
    }
-   
+
+   // CS4432-Project2: Modified to implement the type of
+   // indexing passed by idxtype variable in the constructor.
    /**
     * Opens the index described by this object.
     * @return the Index object associated with this information
     */
    public Index open() {
       Schema sch = schema();
-      // Create new HashIndex for hash indexing
-      return new HashIndex(idxname, sch, tx);
+
+      switch (idxtype){
+         case "sh":
+            // Create new HashIndex for hash indexing
+            return new HashIndex(idxname, sch, tx);
+         case "bt":
+            return new BTreeIndex(idxname, sch, tx);
+         default:
+            return new ExtensibleHashIndex(idxname, sch, tx);
+      }
    }
    
    /**
